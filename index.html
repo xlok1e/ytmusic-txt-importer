@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YTMusic Importer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+<div class="modal-overlay" id="modal-overlay">
+<div class="modal">
+<div class="modal-top">
+<div class="modal-title">Как получить данные для импорта</div>
+<button class="modal-close" id="modal-close">✕</button>
+</div>
+<p class="modal-sub">Инструкция по получению заголовков запроса</p>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">Авторизация</div>
+<div class="step-desc">
+Открой <a href="https://music.youtube.com" target="_blank">music.youtube.com</a> и
+войди в свой Google аккаунт.
+</div>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">Инструменты разработчика</div>
+<div class="step-desc">
+Нажми <code>F12</code>, перейди во вкладку <b>Network (Сеть)</b> и обнови страницу.
+</div>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">Найди нужный запрос</div>
+<div class="step-desc">
+Поставь лайк на любом треке. В Network появится POST-запрос
+<code>like</code> — кликни на него. Убедись что в заголовках есть строка
+<code>Authorization: SAPISIDHASH ...</code> — без неё создание плейлиста не работает.
+</div>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">Копирование заголовков</div>
+<div class="step-desc">
+Нажми на запрос правой кнопкой мыши → <b>Копировать (copy)</b> →
+<b>Copy request headers (Копировать заголовки)</b>.
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="confirm-overlay">
+<div class="modal">
+<div class="modal-top">
+<div class="modal-title">Остановить импорт?</div>
+</div>
+<p class="modal-sub" style="margin-bottom: 24px">
+После остановки все уже найденные треки будут сразу добавлены в YouTube Music
+</p>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<button class="primary" id="confirm-stop" style="margin-top: 0">Остановить и создать плейлист</button>
+<button class="primary" id="confirm-cancel" style="margin-top: 0; border-color: var(--text-3); color: var(--text-3)">Продолжить поиск</button>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="header">
+<svg class="logo" viewBox="0 0 46 46" fill="none">
+<circle cx="23" cy="23" r="23" fill="#FF0000" />
+<circle cx="23" cy="23" r="9.5" fill="white" />
+<path d="M19 15 L32 23 L19 31 Z" fill="#FF0000" />
+</svg>
+<h1>YTMusic Importer by <span style="color: var(--red)">Egor Lok1e</span></h1>
+</div>
+
+<div class="resume-banner" id="resume-banner">
+<div class="resume-text" id="resume-text"></div>
+<div class="resume-actions">
+<button class="resume-btn continue" id="resume-continue">Продолжить</button>
+<button class="resume-btn discard" id="resume-discard">Начать заново</button>
+</div>
+</div>
+
+<div class="field">
+<div class="field-header">
+<label>Request Headers</label>
+<button class="help-btn" id="btn-help">Где взять данные?</button>
+</div>
+<textarea id="headers" placeholder="Вставьте скопированные заголовки сюда..."></textarea>
+</div>
+
+<div class="field">
+<label>Название плейлиста</label>
+<input type="text" id="playlist-name" placeholder="Мой новый плейлист" />
+</div>
+
+<div class="field">
+<label>Файл треков (.txt)</label>
+<div class="file-drop" id="drop-zone">
+Перетащите файл или нажмите для выбора
+<input type="file" id="file-input" accept=".txt" style="display: none" />
+</div>
+</div>
+
+<button class="primary" id="btn-start" disabled>Начать импорт</button>
+
+<div class="progress" id="progress">
+<div class="progress-meta">
+<span id="progress-label" style="color: var(--text-3); text-transform: uppercase">Инициализация</span>
+<span id="progress-text" style="color: var(--text-2)">0 / 0</span>
+</div>
+<div class="bar-wrap"><div class="bar" id="bar"></div></div>
+</div>
+
+<div class="log" id="log"></div>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

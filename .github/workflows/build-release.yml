@@ -10,6 +10,8 @@ permissions:
 jobs:
   build-macos:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -34,9 +36,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/YTMusic.Importer.macOS.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -56,3 +62,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: "dist/YTMusic Importer.exe"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
